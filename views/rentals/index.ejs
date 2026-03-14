@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <h1 class="page-title">Rent Products</h1>
+  <form method="GET" action="/rentals" class="search-form">
+    <div class="search-row">
+      <input type="text" name="search" value="<%= query.search || '' %>" placeholder="Search rentals..." class="search-input" />
+      <select name="category" class="select-input">
+        <option value="">All Categories</option>
+        <% categories.forEach(function(cat) { %>
+          <option value="<%= cat %>" <%= query.category === cat ? 'selected' : '' %>><%= cat %></option>
+        <% }) %>
+      </select>
+      <button type="submit" class="btn-primary">Search</button>
+      <a href="/rentals" class="btn-outline">Clear</a>
+    </div>
+  </form>
+
+  <% if (products.length === 0) { %>
+    <div class="empty-state">
+      <p>No rental products available.</p>
+    </div>
+  <% } else { %>
+    <p class="result-count"><%= products.length %> item<%= products.length !== 1 ? 's' : '' %> available for rent</p>
+    <div class="products-grid">
+      <% products.forEach(function(product) { %>
+        <div class="product-card rental-card">
+          <% if (product.images && product.images.length > 0) { %>
+            <img src="<%= product.images[0] %>" alt="<%= product.title %>" class="product-img" />
+          <% } else { %>
+            <div class="product-img-placeholder">&#x1F504;</div>
+          <% } %>
+          <div class="product-info">
+            <span class="product-category"><%= product.category %></span>
+            <h4><%= product.title %></h4>
+            <p class="product-condition"><%= product.condition %></p>
+            <p class="product-price">$<%= product.rentalPricePerDay.toFixed(2) %>/day</p>
+            <p class="deposit-info">Deposit: $<%= product.securityDeposit.toFixed(2) %></p>
+            <a href="/rentals/rent/<%= product._id %>" class="btn-rent btn-sm">Rent Now</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

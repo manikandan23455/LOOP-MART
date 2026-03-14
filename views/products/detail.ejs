@@ -1,0 +1,75 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <div class="product-detail">
+    <div class="product-detail-images">
+      <% if (product.images && product.images.length > 0) { %>
+        <img src="<%= product.images[0] %>" alt="<%= product.title %>" class="product-detail-img" id="mainImg" />
+        <% if (product.images.length > 1) { %>
+          <div class="thumbnail-row">
+            <% product.images.forEach(function(img, idx) { %>
+              <img src="<%= img %>" alt="Thumbnail <%= idx+1 %>" class="thumb-img" onclick="document.getElementById('mainImg').src=this.src" />
+            <% }) %>
+          </div>
+        <% } %>
+      <% } else { %>
+        <div class="product-img-placeholder large">&#x1F4F7;</div>
+      <% } %>
+    </div>
+
+    <div class="product-detail-info">
+      <span class="product-category"><%= product.category %></span>
+      <h1><%= product.title %></h1>
+      <span class="badge-condition"><%= product.condition %></span>
+
+      <% if (product.isAvailableForSale) { %>
+        <div class="price-box">
+          <p class="price-label">Purchase Price</p>
+          <p class="big-price">$<%= product.price.toFixed(2) %></p>
+          <p class="stock-info">Stock: <%= product.stock %> available</p>
+        </div>
+      <% } %>
+
+      <% if (product.isAvailableForRent) { %>
+        <div class="price-box rental-price-box">
+          <p class="price-label">Rental Price</p>
+          <p class="big-price rent-price">$<%= product.rentalPricePerDay.toFixed(2) %>/day</p>
+          <p class="deposit-info">Security Deposit: $<%= product.securityDeposit.toFixed(2) %></p>
+        </div>
+      <% } %>
+
+      <p class="product-description"><%= product.description %></p>
+
+      <% if (product.tags && product.tags.length > 0) { %>
+        <div class="tags-row">
+          <% product.tags.forEach(function(tag) { %>
+            <span class="tag">#<%= tag %></span>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <p class="seller-info">Sold by: <strong><%= product.seller.name %></strong></p>
+
+      <div class="detail-actions">
+        <% if (sessionUser) { %>
+          <% if (product.isAvailableForSale && product.stock > 0) { %>
+            <form method="POST" action="/cart/add/<%= product._id %>">
+              <%- include('../partials/csrf') %>
+              <input type="number" name="quantity" value="1" min="1" max="<%= product.stock %>" class="qty-input" />
+              <button type="submit" class="btn-primary">Add to Cart</button>
+            </form>
+          <% } else if (product.isAvailableForSale) { %>
+            <p class="out-of-stock">Out of Stock</p>
+          <% } %>
+          <% if (product.isAvailableForRent) { %>
+            <a href="/rentals/rent/<%= product._id %>" class="btn-rent">Rent This Item</a>
+          <% } %>
+        <% } else { %>
+          <a href="/auth/login" class="btn-primary">Log in to Buy / Rent</a>
+        <% } %>
+        <a href="/products" class="btn-outline">Back to Products</a>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

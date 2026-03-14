@@ -1,0 +1,53 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <div class="dashboard-header">
+    <h1 class="page-title">Manage Orders</h1>
+    <a href="/admin/dashboard" class="btn-outline">&larr; Dashboard</a>
+  </div>
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Buyer</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Update Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% orders.forEach(function(order) { %>
+          <tr>
+            <td class="order-id-cell"><%= order._id %></td>
+            <td><%= order.buyer ? order.buyer.name : 'N/A' %></td>
+            <td>
+              <% order.items.forEach(function(item) { %>
+                <div><%= item.product ? item.product.title : 'Product' %> x<%= item.quantity %></div>
+              <% }) %>
+            </td>
+            <td>$<%= order.totalAmount.toFixed(2) %></td>
+            <td><%= order.paymentMethod %></td>
+            <td><span class="order-status status-<%= order.orderStatus.toLowerCase() %>"><%= order.orderStatus %></span></td>
+            <td><%= new Date(order.createdAt).toLocaleDateString() %></td>
+            <td>
+              <form method="POST" action="/admin/orders/<%= order._id %>/status" class="inline-form">
+                <%- include('../partials/csrf') %>
+                <select name="status" class="select-sm">
+                  <% ['Processing','Confirmed','Shipped','Delivered','Cancelled'].forEach(function(s) { %>
+                    <option value="<%= s %>" <%= order.orderStatus === s ? 'selected' : '' %>><%= s %></option>
+                  <% }) %>
+                </select>
+                <button type="submit" class="btn-primary btn-sm">Update</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/footer') %>

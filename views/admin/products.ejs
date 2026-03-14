@@ -1,0 +1,61 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <div class="dashboard-header">
+    <h1 class="page-title">Manage Products</h1>
+    <a href="/admin/dashboard" class="btn-outline">&larr; Dashboard</a>
+  </div>
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Seller</th>
+          <th>Price</th>
+          <th>Status</th>
+          <th>For Rent</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(function(product) { %>
+          <tr>
+            <td><%= product.title %></td>
+            <td><%= product.category %></td>
+            <td><%= product.seller ? product.seller.name : 'N/A' %></td>
+            <td>$<%= product.price.toFixed(2) %></td>
+            <td>
+              <% if (product.isApproved) { %>
+                <span class="badge-success">Approved</span>
+              <% } else { %>
+                <span class="badge-pending">Pending</span>
+              <% } %>
+            </td>
+            <td><%= product.isAvailableForRent ? '&#x2705;' : '&#x274C;' %></td>
+            <td class="actions-cell">
+              <% if (!product.isApproved) { %>
+                <form method="POST" action="/admin/products/<%= product._id %>/approve" style="display:inline;">
+                  <%- include('../partials/csrf') %>
+                  <button type="submit" class="btn-primary btn-sm">Approve</button>
+                </form>
+                <form method="POST" action="/admin/products/<%= product._id %>/reject" style="display:inline;"
+                  onsubmit="return confirm('Reject and delete this product?')">
+                  <%- include('../partials/csrf') %>
+                  <button type="submit" class="btn-danger btn-sm">Reject</button>
+                </form>
+              <% } else { %>
+                <form method="POST" action="/admin/products/<%= product._id %>/reject" style="display:inline;"
+                  onsubmit="return confirm('Remove this product?')">
+                  <%- include('../partials/csrf') %>
+                  <button type="submit" class="btn-danger btn-sm">Remove</button>
+                </form>
+              <% } %>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/footer') %>

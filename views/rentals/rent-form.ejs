@@ -1,0 +1,72 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <h1 class="page-title">Rent: <%= product.title %></h1>
+  <div class="rental-form-layout">
+    <div class="rental-product-info">
+      <% if (product.images && product.images.length > 0) { %>
+        <img src="<%= product.images[0] %>" alt="<%= product.title %>" class="rental-product-img" />
+      <% } else { %>
+        <div class="product-img-placeholder">&#x1F504;</div>
+      <% } %>
+      <h3><%= product.title %></h3>
+      <p><%= product.description %></p>
+      <p><strong>Condition:</strong> <%= product.condition %></p>
+      <p class="product-price">$<%= product.rentalPricePerDay.toFixed(2) %>/day</p>
+      <p class="deposit-info">Security Deposit: $<%= product.securityDeposit.toFixed(2) %></p>
+      <p>Owner: <%= product.seller.name %></p>
+    </div>
+    <form method="POST" action="/rentals/rent/<%= product._id %>" class="rental-form" id="rentalForm">
+      <%- include('../partials/csrf') %>
+      <div class="form-group">
+        <label>Start Date *</label>
+        <input type="date" name="startDate" id="startDate" required min="<%= new Date().toISOString().split('T')[0] %>" onchange="calculateCost()" />
+      </div>
+      <div class="form-group">
+        <label>End Date *</label>
+        <input type="date" name="endDate" id="endDate" required min="<%= new Date().toISOString().split('T')[0] %>" onchange="calculateCost()" />
+      </div>
+      <div id="cost-preview" class="cost-preview hidden">
+        <h4>Rental Cost Estimate</h4>
+        <p>Duration: <span id="daysCount">0</span> days</p>
+        <p>Rental Cost: $<span id="rentalCost">0.00</span></p>
+        <p>Security Deposit: $<%= product.securityDeposit.toFixed(2) %></p>
+        <p><strong>Total Amount: $<span id="totalAmount">0.00</span></strong></p>
+        <p class="deposit-note">* Deposit refunded upon undamaged return</p>
+      </div>
+      <div class="form-group">
+        <label>Shipping Address *</label>
+        <textarea name="shippingAddress" required rows="3" placeholder="Enter delivery address"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select name="paymentMethod">
+          <option value="Cash on Delivery">Cash on Delivery</option>
+          <option value="Online Payment">Online Payment</option>
+        </select>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-rent btn-full">Confirm Rental</button>
+        <a href="/rentals" class="btn-outline btn-full" style="margin-top:8px;">Back to Rentals</a>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+const pricePerDay = <%= product.rentalPricePerDay %>;
+const deposit = <%= product.securityDeposit %>;
+function calculateCost() {
+  const start = new Date(document.getElementById('startDate').value);
+  const end = new Date(document.getElementById('endDate').value);
+  if (start && end && end > start) {
+    const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+    const rental = days * pricePerDay;
+    const total = rental + deposit;
+    document.getElementById('daysCount').textContent = days;
+    document.getElementById('rentalCost').textContent = rental.toFixed(2);
+    document.getElementById('totalAmount').textContent = total.toFixed(2);
+    document.getElementById('cost-preview').classList.remove('hidden');
+  }
+}
+</script>
+<%- include('../partials/footer') %>

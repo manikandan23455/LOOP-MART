@@ -1,0 +1,38 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <h1 class="page-title">Admin Dashboard</h1>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-number"><%= stats.users %></div>
+      <div class="stat-label">Total Users</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number"><%= stats.products %></div>
+      <div class="stat-label">Total Products</div>
+    </div>
+    <div class="stat-card stat-pending">
+      <div class="stat-number"><%= stats.pendingProducts %></div>
+      <div class="stat-label">Pending Approval</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number"><%= stats.orders %></div>
+      <div class="stat-label">Total Orders</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number"><%= stats.rentals %></div>
+      <div class="stat-label">Total Rentals</div>
+    </div>
+    <div class="stat-card stat-active">
+      <div class="stat-number"><%= stats.activeRentals %></div>
+      <div class="stat-label">Active Rentals</div>
+    </div>
+  </div>
+  <div class="admin-nav-grid">
+    <a href="/admin/users" class="admin-nav-card">&#128100; Manage Users</a>
+    <a href="/admin/products" class="admin-nav-card">&#128230; Manage Products</a>
+    <a href="/admin/orders" class="admin-nav-card">&#128203; Manage Orders</a>
+    <a href="/admin/rentals" class="admin-nav-card">&#x1F504; Manage Rentals</a>
+  </div>
+</div>
+<%- include('../partials/footer') %>

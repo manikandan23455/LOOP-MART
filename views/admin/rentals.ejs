@@ -1,0 +1,60 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <div class="dashboard-header">
+    <h1 class="page-title">Manage Rentals</h1>
+    <a href="/admin/dashboard" class="btn-outline">&larr; Dashboard</a>
+  </div>
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Renter</th>
+          <th>Owner</th>
+          <th>Dates</th>
+          <th>Days</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Deposit</th>
+          <th>Update</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% rentals.forEach(function(rental) { %>
+          <tr>
+            <td><%= rental.product ? rental.product.title : 'N/A' %></td>
+            <td><%= rental.renter ? rental.renter.name : 'N/A' %></td>
+            <td><%= rental.owner ? rental.owner.name : 'N/A' %></td>
+            <td>
+              <%= new Date(rental.startDate).toLocaleDateString() %> -
+              <%= new Date(rental.endDate).toLocaleDateString() %>
+            </td>
+            <td><%= rental.rentalDays %></td>
+            <td>$<%= rental.totalAmount.toFixed(2) %></td>
+            <td><span class="rental-status status-<%= rental.status.toLowerCase() %>"><%= rental.status %></span></td>
+            <td>
+              <% if (rental.depositRefunded) { %>
+                <span class="badge-success">Refunded</span>
+              <% } else { %>
+                <span class="badge-pending">Pending</span>
+              <% } %>
+            </td>
+            <td>
+              <form method="POST" action="/admin/rentals/<%= rental._id %>/status" class="inline-form">
+                <%- include('../partials/csrf') %>
+                <select name="status" class="select-sm">
+                  <% ['Pending','Active','Returned','Cancelled','Disputed'].forEach(function(s) { %>
+                    <option value="<%= s %>" <%= rental.status === s ? 'selected' : '' %>><%= s %></option>
+                  <% }) %>
+                </select>
+                <button type="submit" class="btn-primary btn-sm">Update</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/footer') %>
