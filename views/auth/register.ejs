@@ -1,0 +1,30 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container auth-container">
+  <h1 class="page-title">Create Account</h1>
+  <form method="POST" action="/auth/register" class="auth-form">
+    <%- include('../partials/csrf') %>
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required placeholder="Your full name" />
+    </div>
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required placeholder="you@example.com" />
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required minlength="6" placeholder="Min 6 characters" />
+    </div>
+    <div class="form-group">
+      <label for="role">I want to</label>
+      <select id="role" name="role">
+        <option value="buyer">Buy products</option>
+        <option value="seller">Sell products</option>
+      </select>
+    </div>
+    <button type="submit" class="btn-primary btn-full">Create Account</button>
+    <p class="auth-link">Already have an account? <a href="/auth/login">Log in</a></p>
+  </form>
+</div>
+<%- include('../partials/footer') %>

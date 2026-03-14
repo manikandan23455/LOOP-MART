@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <h1 class="page-title">Rental Details</h1>
+  <div class="order-detail-card">
+    <div class="order-detail-header">
+      <div>
+        <p><strong>Product:</strong> <%= rental.product ? rental.product.title : 'N/A' %></p>
+        <p><strong>Owner:</strong> <%= rental.owner ? rental.owner.name : 'N/A' %></p>
+        <p><strong>Start Date:</strong> <%= new Date(rental.startDate).toLocaleDateString() %></p>
+        <p><strong>End Date:</strong> <%= new Date(rental.endDate).toLocaleDateString() %></p>
+        <p><strong>Duration:</strong> <%= rental.rentalDays %> days</p>
+      </div>
+      <div>
+        <p><strong>Status:</strong> <span class="rental-status status-<%= rental.status.toLowerCase() %>"><%= rental.status %></span></p>
+        <p><strong>Price/Day:</strong> $<%= rental.pricePerDay.toFixed(2) %></p>
+        <p><strong>Rental Cost:</strong> $<%= rental.totalRentalCost.toFixed(2) %></p>
+        <p><strong>Security Deposit:</strong> $<%= rental.securityDeposit.toFixed(2) %> <% if (rental.depositRefunded) { %><span class="badge-success">Refunded</span><% } %></p>
+        <p><strong>Total Paid:</strong> $<%= rental.totalAmount.toFixed(2) %></p>
+        <p><strong>Payment:</strong> <%= rental.paymentMethod %></p>
+        <p><strong>Shipping Address:</strong> <%= rental.shippingAddress %></p>
+      </div>
+    </div>
+    <% if (rental.product && rental.product.images && rental.product.images.length > 0) { %>
+      <div style="margin:16px 0;">
+        <img src="<%= rental.product.images[0] %>" alt="Product" style="max-width:200px;border-radius:8px;" />
+      </div>
+    <% } %>
+    <div class="form-actions">
+      <% if (rental.status === 'Active') { %>
+        <form method="POST" action="/rentals/return/<%= rental._id %>"
+          onsubmit="return confirm('Confirm return of this rental?')">
+          <%- include('../partials/csrf') %>
+          <button type="submit" class="btn-outline">Return Item</button>
+        </form>
+      <% } %>
+      <a href="/rentals/my-rentals" class="btn-outline">Back to My Rentals</a>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

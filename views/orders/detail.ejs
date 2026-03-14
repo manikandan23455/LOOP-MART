@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <h1 class="page-title">Order Details</h1>
+  <div class="order-detail-card">
+    <div class="order-detail-header">
+      <div>
+        <p><strong>Order ID:</strong> <%= order._id %></p>
+        <p><strong>Date:</strong> <%= new Date(order.createdAt).toLocaleString() %></p>
+        <p><strong>Payment:</strong> <%= order.paymentMethod %></p>
+        <p><strong>Payment Status:</strong> <span class="badge-payment"><%= order.paymentStatus %></span></p>
+      </div>
+      <div>
+        <p><strong>Status:</strong> <span class="order-status status-<%= order.orderStatus.toLowerCase() %>"><%= order.orderStatus %></span></p>
+        <p><strong>Shipping Address:</strong></p>
+        <p class="address-text"><%= order.shippingAddress %></p>
+      </div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% order.items.forEach(function(item) { %>
+          <tr>
+            <td><%= item.product ? item.product.title : 'Product' %></td>
+            <td><%= item.quantity %></td>
+            <td>$<%= item.priceAtPurchase.toFixed(2) %></td>
+            <td>$<%= (item.priceAtPurchase * item.quantity).toFixed(2) %></td>
+          </tr>
+        <% }) %>
+        <tr class="total-row">
+          <td colspan="3"><strong>Total</strong></td>
+          <td><strong>$<%= order.totalAmount.toFixed(2) %></strong></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="form-actions">
+      <a href="/orders" class="btn-outline">Back to Orders</a>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <h1 class="page-title">Shopping Cart</h1>
+  <% if (cart.length === 0) { %>
+    <div class="empty-state">
+      <p>Your cart is empty.</p>
+      <a href="/products" class="btn-primary">Browse Products</a>
+    </div>
+  <% } else { %>
+    <div class="cart-layout">
+      <div class="cart-items">
+        <% cart.forEach(function(item) { %>
+          <div class="cart-item">
+            <% if (item.image) { %>
+              <img src="<%= item.image %>" alt="<%= item.title %>" class="cart-item-img" />
+            <% } else { %>
+              <div class="cart-item-img-placeholder">&#x1F4F7;</div>
+            <% } %>
+            <div class="cart-item-info">
+              <h4><%= item.title %></h4>
+              <p>Qty: <%= item.quantity %></p>
+              <p class="product-price">$<%= (item.price * item.quantity).toFixed(2) %></p>
+            </div>
+            <form method="POST" action="/cart/remove/<%= item.productId %>">
+              <%- include('../partials/csrf') %>
+              <button type="submit" class="btn-danger btn-sm">Remove</button>
+            </form>
+          </div>
+        <% }) %>
+      </div>
+      <div class="cart-summary">
+        <h3>Order Summary</h3>
+        <p>Items: <%= cart.length %></p>
+        <p class="cart-total">Total: <strong>$<%= total.toFixed(2) %></strong></p>
+        <a href="/orders/checkout" class="btn-primary btn-full">Proceed to Checkout</a>
+        <a href="/products" class="btn-outline btn-full" style="margin-top:8px;">Continue Shopping</a>
+      </div>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

@@ -1,0 +1,107 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<section class="hero">
+  <div class="container hero-content">
+    <h1>Buy, Sell &amp; Rent — All in One Place</h1>
+    <p>LoopMart is your circular economy marketplace. Save money, reduce waste, and find everything you need.</p>
+    <div class="hero-buttons">
+      <a href="/products" class="btn-primary">Shop Now</a>
+      <a href="/rentals" class="btn-outline">Rent a Product</a>
+    </div>
+  </div>
+</section>
+
+<section class="features-section">
+  <div class="container">
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F6D2;</div>
+        <h3>Buy</h3>
+        <p>Browse thousands of products across categories. Compare prices and purchase securely.</p>
+        <a href="/products" class="btn-outline">Browse Products</a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F3EA;</div>
+        <h3>Sell</h3>
+        <p>List your products easily. Reach a wider audience and manage your inventory.</p>
+        <a href="/auth/register" class="btn-outline">Start Selling</a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">&#x1F504;</div>
+        <h3>Rent</h3>
+        <p>Rent electronics, furniture, tools and more. Choose your duration and save money.</p>
+        <a href="/rentals" class="btn-outline">Explore Rentals</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if (featured.length > 0) { %>
+<section class="products-section">
+  <div class="container">
+    <h2 class="section-title">Featured Products</h2>
+    <div class="products-grid">
+      <% featured.forEach(function(product) { %>
+        <div class="product-card">
+          <% if (product.images && product.images.length > 0) { %>
+            <img src="<%= product.images[0] %>" alt="<%= product.title %>" class="product-img" />
+          <% } else { %>
+            <div class="product-img-placeholder">&#x1F4F7;</div>
+          <% } %>
+          <div class="product-info">
+            <span class="product-category"><%= product.category %></span>
+            <h4><%= product.title %></h4>
+            <p class="product-price">$<%= product.price.toFixed(2) %></p>
+            <% if (product.isAvailableForRent) { %>
+              <span class="badge-rent">Available to Rent</span>
+            <% } %>
+            <a href="/products/<%= product._id %>" class="btn-primary btn-sm">View</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <div class="section-link">
+      <a href="/products" class="btn-outline">View All Products &rarr;</a>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (rentals.length > 0) { %>
+<section class="rentals-section">
+  <div class="container">
+    <h2 class="section-title">Available for Rent</h2>
+    <div class="products-grid">
+      <% rentals.forEach(function(product) { %>
+        <div class="product-card rental-card">
+          <% if (product.images && product.images.length > 0) { %>
+            <img src="<%= product.images[0] %>" alt="<%= product.title %>" class="product-img" />
+          <% } else { %>
+            <div class="product-img-placeholder">&#x1F504;</div>
+          <% } %>
+          <div class="product-info">
+            <span class="product-category"><%= product.category %></span>
+            <h4><%= product.title %></h4>
+            <p class="product-price">$<%= product.rentalPricePerDay.toFixed(2) %>/day</p>
+            <p class="deposit-info">Deposit: $<%= product.securityDeposit.toFixed(2) %></p>
+            <a href="/rentals/rent/<%= product._id %>" class="btn-rent btn-sm">Rent Now</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <div class="section-link">
+      <a href="/rentals" class="btn-outline">View All Rentals &rarr;</a>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<footer class="site-footer">
+  <div class="container">
+    <p>&copy; 2024 LoopMart &mdash; Sustainable Commerce Platform</p>
+    <p>Buy &bull; Sell &bull; Rent</p>
+  </div>
+</footer>
+
+<%- include('partials/footer') %>

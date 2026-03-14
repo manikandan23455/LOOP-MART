@@ -1,0 +1,40 @@
+<nav class="navbar">
+  <div class="container nav-container">
+    <a class="navbar-brand" href="/">&#x267B; LoopMart</a>
+    <div class="nav-links">
+      <a href="/products">Buy</a>
+      <a href="/rentals">Rent</a>
+      <% if (sessionUser) { %>
+        <a href="/cart" class="cart-link">
+          Cart <% if (cartCount > 0) { %><span class="cart-badge"><%= cartCount %></span><% } %>
+        </a>
+        <a href="/orders">My Orders</a>
+        <a href="/rentals/my-rentals">My Rentals</a>
+        <% if (sessionUser.role === 'seller' || sessionUser.role === 'admin') { %>
+          <a href="/products/seller/dashboard">Sell</a>
+        <% } %>
+        <% if (sessionUser.role === 'admin') { %>
+          <a href="/admin/dashboard" class="admin-link">Admin</a>
+        <% } %>
+        <div class="user-menu">
+          <span class="user-name">&#128100; <%= sessionUser.name %></span>
+          <div class="user-dropdown">
+            <a href="/auth/profile">Profile</a>
+            <a href="/auth/logout">Logout</a>
+          </div>
+        </div>
+      <% } else { %>
+        <a href="/auth/login" class="btn-outline">Login</a>
+        <a href="/auth/register" class="btn-primary">Register</a>
+      <% } %>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <% if (success && success.length > 0) { %>
+    <div class="alert alert-success"><%= success[0] %></div>
+  <% } %>
+  <% if (error && error.length > 0) { %>
+    <div class="alert alert-error"><%= error[0] %></div>
+  <% } %>
+</div>

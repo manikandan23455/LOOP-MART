@@ -1,0 +1,40 @@
+<%- include('../partials/header') %>
+<%- include('../partials/navbar') %>
+<div class="container">
+  <h1 class="page-title">My Rentals</h1>
+  <% if (rentals.length === 0) { %>
+    <div class="empty-state">
+      <p>You haven't rented any products yet.</p>
+      <a href="/rentals" class="btn-rent">Browse Rentals</a>
+    </div>
+  <% } else { %>
+    <div class="orders-list">
+      <% rentals.forEach(function(rental) { %>
+        <div class="order-card">
+          <div class="order-header">
+            <span class="order-id">
+              <%= rental.product ? rental.product.title : 'Product' %>
+            </span>
+            <span class="rental-status status-<%= rental.status.toLowerCase() %>"><%= rental.status %></span>
+          </div>
+          <div class="order-items-preview">
+            <span><%= new Date(rental.startDate).toLocaleDateString() %> &rarr; <%= new Date(rental.endDate).toLocaleDateString() %></span>
+            <span>(<%= rental.rentalDays %> days)</span>
+          </div>
+          <div class="order-footer">
+            <span class="order-total">Total: $<%= rental.totalAmount.toFixed(2) %></span>
+            <% if (rental.status === 'Active') { %>
+              <form method="POST" action="/rentals/return/<%= rental._id %>" style="display:inline;"
+                onsubmit="return confirm('Confirm return of this rental?')">
+                <%- include('../partials/csrf') %>
+                <button type="submit" class="btn-outline btn-sm">Return Item</button>
+              </form>
+            <% } %>
+            <a href="/rentals/detail/<%= rental._id %>" class="btn-outline btn-sm">View Details</a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>
